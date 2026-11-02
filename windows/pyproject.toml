@@ -6,8 +6,11 @@ readme = "README.md"
 authors = [
     { name = "Dharani", email = "dharanisara14@gmail.com" }
 ]
-requires-python = ">=3.15"
-dependencies = []
+requires-python = ">=3.12"
+dependencies = [
+    "onnx==1.16.0",
+    "ultralytics==8.2.0",
+]
 
 [project.scripts]
 windows = "windows:main"
