@@ -1,0 +1,35 @@
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+
+# Models and generated engines
+*.onnx
+*.engine
+*.plan
+*.pt
+*.pth
+*.weights
+
+# Data and video
+data/
+*.mp4
+*.avi
+*.mkv
+
+# Generated benchmark output
+logs/
+results/**/*.csv
+results/**/*.json
+
+# Editor and OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+
+/edge_data/*
