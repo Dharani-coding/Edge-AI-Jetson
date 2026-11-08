@@ -39,3 +39,18 @@ Summary from verification:
 [11/02/2026-12:06:39] [V] End-to-End Host Latency: the duration from when the H2D of a query is called to when the D2H of the same query is completed, which includes the latency to wait for the completion of the previous query. This is the latency of a query if multiple queries are enqueued consecutively.
 [11/02/2026-12:06:39] [I]
 &&&& PASSED TensorRT.trtexec [TensorRT v8201] # /usr/src/tensorrt/bin/trtexec --loadEngine=/mnt/usb-drive/models/yolov8n-seg_fp16.engine --verbose
+
+Summary from FP32 build:
+[11/07/2026-09:42:09] [I] === Performance summary ===
+[11/07/2026-09:42:09] [I] Throughput: 30.1664 qps
+[11/07/2026-09:42:09] [I] Latency: min = 33.0022 ms, max = 33.3137 ms, mean = 33.1384 ms, median = 33.1295 ms, percentile(99%) = 33.3137 ms
+[11/07/2026-09:42:09] [I] End-to-End Host Latency: min = 33.0129 ms, max = 33.3247 ms, mean = 33.1488 ms, median = 33.1392 ms, percentile(99%) = 33.3247 ms
+[11/07/2026-09:42:09] [I] Enqueue Time: min = 6.52344 ms, max = 13.2441 ms, mean = 9.68379 ms, median = 8.48267 ms, percentile(99%) = 13.2441 ms
+[11/07/2026-09:42:09] [I] H2D Latency: min = 0.152954 ms, max = 0.161865 ms, mean = 0.154851 ms, median = 0.154541 ms, percentile(99%) = 0.161865 ms
+[11/07/2026-09:42:09] [I] GPU Compute Time: min = 32.6077 ms, max = 32.9248 ms, mean = 32.7497 ms, median = 32.7407 ms, percentile(99%) = 32.9248 ms
+[11/07/2026-09:42:09] [I] D2H Latency: min = 0.231201 ms, max = 0.240967 ms, mean = 0.233919 ms, median = 0.233154 ms, percentile(99%) = 0.240967 ms
+[11/07/2026-09:42:09] [I] Total Host Walltime: 3.0829 s
+[11/07/2026-09:42:09] [I] Total GPU Compute Time: 3.04572 s
+[11/07/2026-09:42:09] [I] Explanations of the performance metrics are printed in the verbose logs.
+[11/07/2026-09:42:09] [I] 
+&&&& PASSED TensorRT.trtexec [TensorRT v8201] # /usr/src/tensorrt/bin/trtexec --onnx=/mnt/usb-drive/models/yolov8n-seg.onnx --saveEngine=/mnt/usb-drive/models/yolov8n-seg_320x416_fp32_trt8.2.1.engine --workspace=1024
