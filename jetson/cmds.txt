@@ -1,1 +1,3 @@
-~/internet.sh & cd /mnt/usb-drive/Edge-AI-Jetson/jetson & source /mnt/usb-drive/onnx-env/bin/activate
+~/internet.sh
+cd /mnt/usb-drive/Edge-AI-Jetson/jetson
+source /mnt/usb-drive/onnx-env/bin/activate
