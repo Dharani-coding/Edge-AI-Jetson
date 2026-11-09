@@ -6,6 +6,7 @@ __pycache__/
 venv/
 .env
 runs/
+data/
 
 # Models and generated engines
 *.onnx

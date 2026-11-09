@@ -1,0 +1,5 @@
+# Shell scripts run on the Jetson: keep Unix line endings even when checked out on Windows.
+*.sh text eol=lf
+
+# Batch files need CRLF, or cmd.exe can mis-handle goto labels.
+*.bat text eol=crlf
