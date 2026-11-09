@@ -66,12 +66,25 @@ void validate(const AppConfig& c)
     require(c.stream.bitrate > 0, "--bitrate must be > 0");
     require(c.stats_interval >= 0, "--stats must be >= 0");
     require(c.max_frames >= 0, "--max-frames must be >= 0");
+    require(c.eval_path.empty() || c.images_path.empty(), "Use either --images or --eval, not both");
 }
 
 }  // namespace
 
 bool parseArgs(int argc, char** argv, AppConfig& c)
 {
+    // --eval changes the detector defaults; apply them first so explicit
+    // --conf/--iou/--max-det (anywhere on the command line) still override.
+    for (int i = 1; i < argc; ++i)
+    {
+        if (std::string(argv[i]) == "--eval")
+        {
+            c.detector.conf_threshold = kEvalConfThreshold;
+            c.detector.iou_threshold = kEvalIouThreshold;
+            c.detector.max_detections = kEvalMaxDetections;
+        }
+    }
+
     for (int i = 1; i < argc; ++i)
     {
         const std::string arg = argv[i];
@@ -102,6 +115,7 @@ bool parseArgs(int argc, char** argv, AppConfig& c)
         // Image mode
         else if (arg == "--images")            c.images_path = nextValue(i, argc, argv);
         else if (arg == "--output")            c.output_dir = nextValue(i, argc, argv);
+        else if (arg == "--eval")              c.eval_path = nextValue(i, argc, argv);
         else
             throw std::invalid_argument("Unknown option: " + arg + " (see --help)");
     }
@@ -140,7 +154,11 @@ void printUsage(const char* program)
         << "  -h, --help           show this help\n\n"
         << "Image mode (no camera, no stream):\n"
         << "  --images PATH        image file or folder to run on\n"
-        << "  --output DIR         where to save annotated images + .txt detections (" << d.output_dir << ")\n";
+        << "  --output DIR         where to save annotated images + .txt detections (" << d.output_dir << ")\n\n"
+        << "Eval mode (COCO accuracy):\n"
+        << "  --eval DIR           COCO images folder; writes <--output>/predictions.json + run_info.json\n"
+        << "                       defaults become conf " << kEvalConfThreshold << ", iou " << kEvalIouThreshold
+        << ", max-det " << kEvalMaxDetections << "; masks always on\n";
 }
 
 void printConfig(const AppConfig& c)
@@ -153,6 +171,11 @@ void printConfig(const AppConfig& c)
         << ", max " << c.detector.max_detections
         << (c.detector.draw_masks ? ", masks on" : ", masks off") << "\n";
 
+    if (!c.eval_path.empty())
+    {
+        std::cout << "  eval       : " << c.eval_path << " -> " << c.output_dir << "/predictions.json\n";
+        return;
+    }
     if (!c.images_path.empty())
     {
         std::cout << "  images     : " << c.images_path << " -> " << c.output_dir << "\n";

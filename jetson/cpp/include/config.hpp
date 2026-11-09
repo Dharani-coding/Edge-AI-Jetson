@@ -45,8 +45,18 @@ struct AppConfig
 
     // Image mode: if set, run on these image(s) instead of the camera.
     std::string images_path;            // image file or folder
-    std::string output_dir = "results"; // annotated images + <name>.txt detections
+    std::string output_dir = "results"; // annotated images + <name>.txt, or predictions.json
+
+    // Eval mode: if set, write COCO predictions.json for the images in this folder.
+    // Detector defaults switch to COCO-evaluation values (see kEval* below).
+    std::string eval_path;
 };
+
+// Detector defaults in --eval mode (same as Ultralytics validation and
+// windows/scripts/eval_onnx_coco.py). Explicit --conf/--iou/--max-det still win.
+constexpr float kEvalConfThreshold = 0.001f;
+constexpr float kEvalIouThreshold = 0.7f;
+constexpr int kEvalMaxDetections = 300;
 
 // Parses command-line options into `config`.
 // Returns false if --help was requested. Throws std::invalid_argument on bad input.

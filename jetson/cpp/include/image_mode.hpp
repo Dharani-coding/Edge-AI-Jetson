@@ -15,4 +15,13 @@ namespace edge_ai {
 // Jetson (TensorRT) and Windows (ONNX) results can be compared directly.
 int runOnImages(const AppConfig& config);
 
+// COCO accuracy evaluation. Runs on every image in config.eval_path (COCO file
+// names, e.g. 000000397133.jpg, which carry the image id) and writes to
+// config.output_dir:
+//   predictions.json  COCO results: bbox [x,y,w,h], score, category_id,
+//                     segmentation as compressed RLE (same as pycocotools)
+//   run_info.json     engine, thresholds and timings
+// Score them with scripts/coco_metrics.py.
+int runEvaluation(const AppConfig& config);
+
 }  // namespace edge_ai

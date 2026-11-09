@@ -205,7 +205,11 @@ int main(int argc, char** argv)
 
     try
     {
-        return config.images_path.empty() ? run(config) : runOnImages(config);
+        if (!config.eval_path.empty())
+            return runEvaluation(config);
+        if (!config.images_path.empty())
+            return runOnImages(config);
+        return run(config);
     }
     catch (const std::exception& error)
     {

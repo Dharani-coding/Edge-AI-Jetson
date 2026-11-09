@@ -34,10 +34,10 @@ import onnxruntime as ort
 from pycocotools import mask as mask_utils
 from pycocotools.coco import COCO
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
+ROOT = Path(__file__).resolve().parents[2]   # Edge-AI-Jetson/
+sys.path.insert(0, str(ROOT / "scripts"))     # shared Windows/Jetson scripts
 from coco_metrics import evaluate, format_table  # noqa: E402
 
-ROOT = Path(__file__).resolve().parents[2]   # Edge-AI-Jetson/
 DATA = ROOT / "data" / "coco_val500"
 
 

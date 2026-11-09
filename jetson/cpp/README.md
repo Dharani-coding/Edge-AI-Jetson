@@ -53,6 +53,18 @@ Image mode runs on files instead of the camera and doesn't stream. It saves an a
 Download `data/results/jetson` to Windows, then run `windows\scripts\compare_with_jetson.bat`
 to compare against ONNX on Windows.
 
+Eval mode measures COCO accuracy. It writes `predictions.json` and `run_info.json` with the
+evaluation thresholds conf 0.001, IoU 0.7 and 300 detections, the same as the Windows baseline:
+
+```bash
+./edge_ai_inference --engine /mnt/usb-drive/models/yolov8n-seg_320x416_fp16_trt8.2.1.engine \
+                    --eval   /mnt/usb-drive/Edge-AI-Jetson/data/coco_val500/images \
+                    --output /mnt/usb-drive/Edge-AI-Jetson/data/results/accuracy/jetson_fp16
+```
+
+Then score it with `scripts/coco_metrics.py --pred <output>/predictions.json`, and compare all runs
+with `scripts/compare_metrics.py`.
+
 Stop the camera mode with **Ctrl+C**, which releases the camera cleanly. If Argus ever gets stuck after a crash, run:
 
 ```bash
