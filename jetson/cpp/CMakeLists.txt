@@ -14,7 +14,7 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG")
 
 # ---------------------------------------------------------------- Dependencies
 
-find_package(OpenCV REQUIRED COMPONENTS core imgproc videoio)
+find_package(OpenCV REQUIRED COMPONENTS core imgproc imgcodecs videoio)
 
 set(CUDA_ROOT "/usr/local/cuda-10.2" CACHE PATH "CUDA toolkit root")
 
@@ -51,6 +51,7 @@ add_library(edge_ai_core STATIC
     src/visualizer.cpp
     src/video_io.cpp
     src/profiler.cpp
+    src/image_mode.cpp
 )
 
 target_include_directories(edge_ai_core PUBLIC
@@ -78,3 +79,28 @@ target_compile_options(edge_ai_core PRIVATE -Wall -Wextra)
 add_executable(edge_ai_inference src/main.cpp)
 target_link_libraries(edge_ai_inference PRIVATE edge_ai_core)
 target_compile_options(edge_ai_inference PRIVATE -Wall -Wextra)
+
+# ---------------------------------------------------------------- Clean options
+# Run from the build directory:
+#
+#   cmake --build . --target clean       remove compiled objects and binaries (keeps configuration)
+#   cmake --build . --clean-first        clean, then rebuild everything
+#   cmake --build . --target distclean   also remove the CMake cache and generated files; then
+#                                        re-run:  cmake <source dir> && cmake --build .
+#
+# Use distclean after changing CUDA/TensorRT/OpenCV installs or CMake options,
+# or when a build behaves strangely.
+
+add_custom_target(distclean
+    COMMAND ${CMAKE_COMMAND} -E remove -f
+        ${CMAKE_BINARY_DIR}/CMakeCache.txt
+        ${CMAKE_BINARY_DIR}/cmake_install.cmake
+        ${CMAKE_BINARY_DIR}/Makefile
+        ${CMAKE_BINARY_DIR}/libedge_ai_core.a
+        ${CMAKE_BINARY_DIR}/edge_ai_inference
+    COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_BINARY_DIR}/CMakeFiles
+    COMMAND ${CMAKE_COMMAND} -E echo "Build directory cleaned. Re-run: cmake ${CMAKE_SOURCE_DIR}"
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    COMMENT "Removing CMake cache and all build outputs"
+    VERBATIM
+)

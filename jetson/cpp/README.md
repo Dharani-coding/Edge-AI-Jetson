@@ -43,7 +43,17 @@ Then start the app on the Jetson:
 ./edge_ai_inference --help
 ```
 
-Stop it with **Ctrl+C**, which releases the camera cleanly. If Argus ever gets stuck after a crash, run:
+Image mode runs on files instead of the camera and doesn't stream. It saves an annotated image plus `<name>.txt` for each input:
+
+```bash
+./edge_ai_inference --images /mnt/usb-drive/Edge-AI-Jetson/data/test_images \
+                    --output /mnt/usb-drive/Edge-AI-Jetson/data/results/jetson
+```
+
+Download `data/results/jetson` to Windows, then run `windows\scripts\compare_with_jetson.bat`
+to compare against ONNX on Windows.
+
+Stop the camera mode with **Ctrl+C**, which releases the camera cleanly. If Argus ever gets stuck after a crash, run:
 
 ```bash
 sudo systemctl restart nvargus-daemon

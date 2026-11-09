@@ -7,6 +7,7 @@
 // Stop with Ctrl+C. The camera is then released cleanly (no Argus errors).
 
 #include "config.hpp"
+#include "image_mode.hpp"
 #include "preprocess.hpp"
 #include "profiler.hpp"
 #include "trt_engine.hpp"
@@ -204,7 +205,7 @@ int main(int argc, char** argv)
 
     try
     {
-        return run(config);
+        return config.images_path.empty() ? run(config) : runOnImages(config);
     }
     catch (const std::exception& error)
     {

@@ -99,6 +99,9 @@ bool parseArgs(int argc, char** argv, AppConfig& c)
         // Run control
         else if (arg == "--stats")             c.stats_interval = toInt(arg, nextValue(i, argc, argv));
         else if (arg == "--max-frames")        c.max_frames = toLong(arg, nextValue(i, argc, argv));
+        // Image mode
+        else if (arg == "--images")            c.images_path = nextValue(i, argc, argv);
+        else if (arg == "--output")            c.output_dir = nextValue(i, argc, argv);
         else
             throw std::invalid_argument("Unknown option: " + arg + " (see --help)");
     }
@@ -134,7 +137,10 @@ void printUsage(const char* program)
         << "Run control:\n"
         << "  --stats N            print stage timings every N frames, 0 = off (" << d.stats_interval << ")\n"
         << "  --max-frames N       stop after N frames, 0 = until Ctrl+C\n"
-        << "  -h, --help           show this help\n";
+        << "  -h, --help           show this help\n\n"
+        << "Image mode (no camera, no stream):\n"
+        << "  --images PATH        image file or folder to run on\n"
+        << "  --output DIR         where to save annotated images + .txt detections (" << d.output_dir << ")\n";
 }
 
 void printConfig(const AppConfig& c)
@@ -145,7 +151,15 @@ void printConfig(const AppConfig& c)
         << "  thresholds : conf " << c.detector.conf_threshold
         << ", iou " << c.detector.iou_threshold
         << ", max " << c.detector.max_detections
-        << (c.detector.draw_masks ? ", masks on" : ", masks off") << "\n"
+        << (c.detector.draw_masks ? ", masks on" : ", masks off") << "\n";
+
+    if (!c.images_path.empty())
+    {
+        std::cout << "  images     : " << c.images_path << " -> " << c.output_dir << "\n";
+        return;
+    }
+
+    std::cout
         << "  camera     : sensor " << c.camera.sensor_id << " mode " << c.camera.sensor_mode
         << " (" << c.camera.sensor_width << "x" << c.camera.sensor_height << "@" << c.camera.fps
         << ") -> " << c.camera.frame_width << "x" << c.camera.frame_height << "\n"

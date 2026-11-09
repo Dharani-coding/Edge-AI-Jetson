@@ -42,6 +42,10 @@ struct AppConfig
     DetectorConfig detector;
     int stats_interval = 30;    // frames between console stats lines, 0 = off
     long max_frames = 0;        // 0 = run until Ctrl+C
+
+    // Image mode: if set, run on these image(s) instead of the camera.
+    std::string images_path;            // image file or folder
+    std::string output_dir = "results"; // annotated images + <name>.txt detections
 };
 
 // Parses command-line options into `config`.
