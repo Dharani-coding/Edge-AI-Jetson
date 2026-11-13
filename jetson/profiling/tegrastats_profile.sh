@@ -87,5 +87,9 @@ sudo nvpmodel -m 0
 sudo jetson_clocks
 echo
 echo "==> Summary lines"
-grep -E "^====|^Summary:|^Stopped early:|^tegrastats:" "$LOG"
+# Run header, the app's summary table (Summary: ... down to "total") and the tegrastats line.
+awk '/^====/ || /^tegrastats:/ { print }
+     /^(Summary|Stopped early):/ { table = 1 }
+     table { print }
+     table && $1 == "total" { table = 0 }' "$LOG"
 echo "Log: $LOG"

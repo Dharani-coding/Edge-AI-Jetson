@@ -188,19 +188,28 @@ int runOnVideo(const AppConfig& config, const std::atomic<bool>& stop)
     if (frames == 0)
         throw std::runtime_error("No frames could be read from " + config.video_path);
 
-    // Whole-run summary: sustained FPS and mean time per stage over every frame.
+    // Whole-run summary: sustained FPS, then mean time and share per stage over every frame.
+    //   Summary: 4104 frames, 5 passes, 300.0 s, sustained 13.68 FPS
+    //     stage     mean ms   share
+    //     capture       2.1    2.9%
+    //     ...
+    //     total        72.9  100.0%
     double total_ms = 0.0;
-    int len = std::snprintf(text, sizeof(text), "%s %ld frames, %d pass(es), %.1f s | sustained %.2f FPS |",
-                            stop ? "Stopped early:" : "Summary:", frames, passes, seconds, frames / seconds);
-    for (int s = 0; s < kStages && len < static_cast<int>(sizeof(text)); ++s)
+    for (int s = 0; s < kStages; ++s)
+        total_ms += stage_sum_ms[s] / frames;
+
+    std::printf("\n%s %ld frames, %d pass%s, %.1f s, sustained %.2f FPS\n",
+                stop ? "Stopped early:" : "Summary:", frames, passes, passes == 1 ? "" : "es",
+                seconds, frames / seconds);
+    std::printf("  %-8s %8s %7s\n", "stage", "mean ms", "share");
+    for (int s = 0; s < kStages; ++s)
     {
         const double mean = stage_sum_ms[s] / frames;
-        total_ms += mean;
-        len += std::snprintf(text + len, sizeof(text) - len, " %s %.1f", stageName(static_cast<Stage>(s)), mean);
+        std::printf("  %-8s %8.1f %6.1f%%\n", stageName(static_cast<Stage>(s)), mean,
+                    total_ms > 0.0 ? 100.0 * mean / total_ms : 0.0);
     }
-    if (len < static_cast<int>(sizeof(text)))
-        std::snprintf(text + len, sizeof(text) - len, " | total %.1f ms", total_ms);
-    std::cout << "\n" << text << std::endl;
+    std::printf("  %-8s %8.1f %6.1f%%\n", "total", total_ms, 100.0);
+    std::fflush(stdout);
 
     if (!looping)
     {

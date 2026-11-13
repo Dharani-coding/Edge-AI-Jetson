@@ -16,7 +16,7 @@ The Jetson runs headless, so nothing is shown on the Jetson itself.
 | `video_io.hpp/.cpp` | `CsiCamera`, `RtpStreamer`, `VideoFileSource` (hardware decoding) and `Mp4Writer` (hardware encoding) |
 | `image_mode`, `video_mode` | `--images`/`--eval` (image files, COCO predictions) and `--video` (annotated MP4 + frames) |
 | `file_utils.hpp/.cpp` | Path helpers (mkdir -p, file name, stem) |
-| `profiler.hpp/.cpp` | Per-stage latency (capture, pre, trt, post, draw, stream) |
+| `profiler.hpp/.cpp` | Per-stage latency (capture, pre, trt, post, draw, stream), plus NVTX ranges for Nsight Systems |
 | `cuda_utils.hpp`, `types.hpp` | RAII CUDA buffers and stream, shared structs |
 
 ## Build (on the Jetson)

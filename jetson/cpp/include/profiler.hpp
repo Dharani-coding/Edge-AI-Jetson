@@ -26,10 +26,19 @@ const char* stageName(Stage stage);
 //   ...capture...     profiler.mark(Stage::Capture);
 //   ...preprocess...  profiler.mark(Stage::Preprocess);
 //   profiler.endFrame();
+//
+// Stages must be marked in enum order (capture, pre, trt, post, draw, stream).
+// When built with NVTX (EDGE_AI_NVTX), every frame and stage is also an NVTX
+// range ("frame" > "capture", "pre", ...) so Nsight Systems shows them on its
+// timeline. Without a profiler attached, the NVTX calls cost almost nothing.
 class Profiler
 {
 public:
     Profiler();
+    ~Profiler();
+
+    Profiler(const Profiler&) = delete;
+    Profiler& operator=(const Profiler&) = delete;
 
     void beginFrame();
     void mark(Stage stage);   // time since the previous mark goes to `stage`
@@ -48,6 +57,12 @@ private:
     static constexpr int kStages = static_cast<int>(Stage::Count);
     static int index(Stage s) { return static_cast<int>(s); }
     static double msSince(Clock::time_point start, Clock::time_point end);
+
+    // NVTX ranges (no-ops without EDGE_AI_NVTX).
+    void pushRange(int stage_or_frame);   // stage index, or kStages for "frame"
+    void popAllRanges();
+
+    int open_ranges_ = 0;   // NVTX ranges currently pushed (frame + stage)
 
     Clock::time_point frame_start_;
     Clock::time_point last_mark_;

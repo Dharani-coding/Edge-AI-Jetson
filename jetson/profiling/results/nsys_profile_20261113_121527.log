@@ -1,0 +1,33 @@
+Generating SQLite file /mnt/usb-drive/Edge-AI-Jetson/jetson/profiling/results/nsys_fp16_maxn.sqlite from /mnt/usb-drive/Edge-AI-Jetson/jetson/profiling/results/nsys_fp16_maxn.nsys-rep
+Using /mnt/usb-drive/Edge-AI-Jetson/jetson/profiling/results/nsys_fp16_maxn.sqlite for SQL queries.
+Running [/opt/nvidia/nsight-systems-cli/2021.5.4/target-linux-tegra-armv8/reports/nvtxppsum.py /mnt/usb-drive/Edge-AI-Jetson/jetson/profiling/results/nsys_fp16_maxn.sqlite]... 
+
+ Time (%)  Total Time (ns)  Instances    Avg (ns)      Med (ns)     Min (ns)    Max (ns)    StdDev (ns)                                                 Range                                                
+ --------  ---------------  ---------  ------------  ------------  ----------  -----------  -----------  ----------------------------------------------------------------------------------------------------
+     43.1   55,620,377,475        758  73,377,806.7  72,602,447.5  58,845,313  132,972,448  5,724,956.2  frame                                                                                               
+     16.6   21,491,055,620        758  28,352,316.1  28,330,755.0  27,726,302   29,368,698    191,480.8  trt                                                                                                 
+     13.1   16,920,122,966        759  22,292,652.1  21,917,188.0  15,045,208   63,934,166  3,121,080.9  draw                                                                                                
+      9.5   12,268,114,580        759  16,163,523.8  15,893,646.0   9,568,698   38,560,625  2,182,000.0  post                                                                                                
+      7.1    9,217,257,452        758  12,159,970.3  12,251,380.5   9,372,031   16,758,802    723,190.6  TensorRT:ExecutionContext::enqueue                                                                  
+      2.6    3,350,330,417        758   4,419,961.0   3,827,552.0   3,655,521   16,687,969  2,345,815.8  pre                                                                                                 
+      1.2    1,602,945,409        758   2,114,703.7   2,082,708.0   1,977,813    2,618,021    106,200.0  capture                                                                                             
+      0.0        1,948,700        759       2,567.5       2,552.0       1,563       33,594      1,160.3  stream                                                                                              
+
+Running [/opt/nvidia/nsight-systems-cli/2021.5.4/target-linux-tegra-armv8/reports/osrtsum.py /mnt/usb-drive/Edge-AI-Jetson/jetson/profiling/results/nsys_fp16_maxn.sqlite]... 
+
+ Time (%)  Total Time (ns)  Num Calls    Avg (ns)      Med (ns)    Min (ns)   Max (ns)    StdDev (ns)            Name         
+ --------  ---------------  ---------  ------------  ------------  --------  -----------  ------------  ----------------------
+     46.1  223,889,699,949      4,743  47,204,237.8  64,631,927.0     9,896  370,034,427  41,841,946.7  pthread_cond_wait     
+     38.7  187,698,885,120     23,471   7,997,055.3      26,562.0       989  118,447,865  14,746,481.0  futex                 
+     11.0   53,493,855,696      1,397  38,291,951.1  58,849,375.0     1,875  229,404,687  37,410,926.5  pthread_mutex_lock    
+      4.2   20,194,522,676    184,524     109,441.2      13,281.0     1,875   16,269,583     963,500.8  ioctl                 
+      0.0       73,034,498      4,752      15,369.2      13,281.0       990      192,708      11,360.8  pthread_cond_signal   
+      0.0       31,550,104        759      41,568.0      40,782.0    16,406      216,511      11,457.6  read                  
+      0.0       11,067,924        142      77,943.1      91,484.5     5,052      207,500      36,362.2  munmap                
+      0.0        2,280,260      1,762       1,294.1       1,146.0       989        2,969         333.0  dup                   
+      0.0        1,925,574          8     240,696.8     172,760.5    13,542      594,688     217,546.1  pthread_join          
+      0.0           51,146          1      51,146.0      51,146.0    51,146       51,146           0.0  mmap                  
+      0.0           47,136          1      47,136.0      47,136.0    47,136       47,136           0.0  pthread_cond_timedwait
+      0.0           37,395          4       9,348.8       8,046.5     7,344       13,958       3,129.1  pthread_cond_broadcast
+      0.0            2,864          2       1,432.0       1,432.0     1,406        1,458          36.8  fflush                
+

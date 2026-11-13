@@ -40,6 +40,21 @@ if(NOT TENSORRT_INCLUDE_DIR OR NOT TENSORRT_LIBRARY OR NOT TENSORRT_PLUGIN_LIBRA
     message(FATAL_ERROR "TensorRT or CUDA runtime not found (CUDA_ROOT=${CUDA_ROOT})")
 endif()
 
+# NVTX labels the profiler stages for Nsight Systems (part of the CUDA toolkit).
+# Optional: without it the app builds the same, just without NVTX ranges.
+option(EDGE_AI_NVTX "Add NVTX ranges for Nsight Systems" ON)
+if(EDGE_AI_NVTX)
+    find_library(NVTX_LIBRARY nvToolsExt
+        PATHS ${CUDA_ROOT}/targets/aarch64-linux/lib ${CUDA_ROOT}/lib64
+    )
+    if(NVTX_LIBRARY)
+        message(STATUS "NVTX: ${NVTX_LIBRARY}")
+    else()
+        message(WARNING "libnvToolsExt not found; building without NVTX ranges")
+        set(EDGE_AI_NVTX OFF)
+    endif()
+endif()
+
 # ---------------------------------------------------------------- Core library
 # Everything except main(), so unit tests (GTest) can link against it later.
 
@@ -73,6 +88,11 @@ target_link_libraries(edge_ai_core PUBLIC
     ${CUDART_LIBRARY}
     ${OpenCV_LIBS}
 )
+
+if(EDGE_AI_NVTX)
+    target_compile_definitions(edge_ai_core PRIVATE EDGE_AI_NVTX)
+    target_link_libraries(edge_ai_core PUBLIC ${NVTX_LIBRARY})
+endif()
 
 target_compile_options(edge_ai_core PRIVATE -Wall -Wextra)
 
