@@ -14,7 +14,6 @@ set -euo pipefail
 
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)       # .../Edge-AI-Jetson/jetson
 REPO_DIR=$(dirname "$SCRIPT_DIR")               # .../Edge-AI-Jetson
-SOURCE_DIR="$SCRIPT_DIR/cpp"
 BUILD_DIR="/mnt/usb-drive/build/edge-ai-inference"
 MODELS_DIR="/mnt/usb-drive/models"
 IMAGES_DIR="$REPO_DIR/data/coco_val500/images"
@@ -27,13 +26,9 @@ TRT_VERSION=$(dpkg-query -W -f='${Version}' libnvinfer8 | cut -d- -f1)   # e.g. 
 
 [[ -d $IMAGES_DIR ]] || { echo "COCO images not found: $IMAGES_DIR (upload data/coco_val500 first)"; exit 1; }
 
-# 1. Clean build: start from an empty build directory
-echo "==> Clean build in $BUILD_DIR"
-rm -rf "$BUILD_DIR"
-mkdir -p "$BUILD_DIR"
+# 1. Clean build
+bash "$SCRIPT_DIR/clean_and_build.sh" "$BUILD_DIR"
 cd "$BUILD_DIR"
-cmake "$SOURCE_DIR"
-cmake --build . -- -j4
 
 # 2. COCO evaluation with each engine (eval defaults: conf 0.001, NMS IoU 0.7, max 300 detections)
 for PRECISION in fp16 fp32; do

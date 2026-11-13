@@ -12,7 +12,6 @@ set -euo pipefail
 
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)       # .../Edge-AI-Jetson/jetson
 REPO_DIR=$(dirname "$SCRIPT_DIR")               # .../Edge-AI-Jetson
-SOURCE_DIR="$SCRIPT_DIR/cpp"
 BUILD_DIR="/mnt/usb-drive/build/edge-ai-inference"
 MODELS_DIR="/mnt/usb-drive/models"
 IMAGES_DIR="$REPO_DIR/data/test_images"
@@ -25,13 +24,9 @@ TRT_VERSION=$(dpkg-query -W -f='${Version}' libnvinfer8 | cut -d- -f1)   # e.g. 
 
 [[ -d $IMAGES_DIR ]] || { echo "Test images not found: $IMAGES_DIR (upload data/test_images first)"; exit 1; }
 
-# 1. Clean build: start from an empty build directory
-echo "==> Clean build in $BUILD_DIR"
-rm -rf "$BUILD_DIR"
-mkdir -p "$BUILD_DIR"
+# 1. Clean build
+bash "$SCRIPT_DIR/clean_and_build.sh" "$BUILD_DIR"
 cd "$BUILD_DIR"
-cmake "$SOURCE_DIR"
-cmake --build . -- -j4
 
 # 2. Inference with each engine on the test images
 for PRECISION in fp16 fp32; do

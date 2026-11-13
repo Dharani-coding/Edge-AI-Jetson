@@ -13,7 +13,6 @@ set -euo pipefail
 
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)       # .../Edge-AI-Jetson/jetson
 REPO_DIR=$(dirname "$SCRIPT_DIR")               # .../Edge-AI-Jetson
-SOURCE_DIR="$SCRIPT_DIR/cpp"
 BUILD_DIR="/mnt/usb-drive/build/edge-ai-inference"
 ENGINE="/mnt/usb-drive/models/yolov8n-seg_320x416_fp16_trt8.2.1.engine"
 VIDEO="${1:-$REPO_DIR/data/videos/demo_video.mp4}"
@@ -23,13 +22,9 @@ OUT_DIR="$REPO_DIR/data/results/video"
 [[ -f $VIDEO ]]  || { echo "Video not found: $VIDEO"; exit 1; }
 [[ -f $ENGINE ]] || { echo "Engine not found: $ENGINE (run build_engines.sh)"; exit 1; }
 
-# 1. Clean build: start from an empty build directory
-echo "==> Clean build in $BUILD_DIR"
-rm -rf "$BUILD_DIR"
-mkdir -p "$BUILD_DIR"
+# 1. Clean build
+bash "$SCRIPT_DIR/clean_and_build.sh" "$BUILD_DIR"
 cd "$BUILD_DIR"
-cmake "$SOURCE_DIR"
-cmake --build . -- -j4
 
 # 2. Annotate the video
 echo
