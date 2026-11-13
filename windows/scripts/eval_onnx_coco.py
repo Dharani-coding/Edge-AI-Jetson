@@ -15,7 +15,7 @@ Thresholds default to the usual COCO-evaluation settings (conf 0.001, IoU 0.7, 3
 Use the SAME values on the Jetson. Precision/recall/F1 then only count detections
 with score >= 0.25, which gives the same result as running NMS at conf 0.25.
 
-Outputs (default data/results/accuracy/windows_onnx/):
+Outputs (default results/accuracy/windows_onnx/):
     predictions.json   COCO results: bbox + RLE mask per detection
     metrics.json       box/mask mAP@50, mAP@50-95, P, R, F1 + run settings
 """
@@ -46,7 +46,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--model", type=Path, default=ROOT / "windows" / "yolov8n-seg.onnx")
     p.add_argument("--images", type=Path, default=DATA / "images")
     p.add_argument("--ann", type=Path, default=DATA / "instances_val2017_subset500.json")
-    p.add_argument("--out", type=Path, default=ROOT / "data" / "results" / "accuracy" / "windows_onnx")
+    p.add_argument("--out", type=Path, default=ROOT / "results" / "accuracy" / "windows_onnx")
     p.add_argument("--conf", type=float, default=0.001, help="score threshold before NMS")
     p.add_argument("--iou", type=float, default=0.7, help="NMS IoU threshold")
     p.add_argument("--max-det", type=int, default=300)

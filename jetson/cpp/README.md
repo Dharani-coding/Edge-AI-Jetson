@@ -49,11 +49,11 @@ Image mode runs on files instead of the camera and doesn't stream. It saves an a
 
 ```bash
 ./edge_ai_inference --images /mnt/usb-drive/Edge-AI-Jetson/data/test_images \
-                    --output /mnt/usb-drive/Edge-AI-Jetson/data/results/jetson
+                    --output /mnt/usb-drive/Edge-AI-Jetson/results/predict/jetson_fp16
 ```
 
-Download `data/results/jetson` to Windows, then run `windows\scripts\compare_with_jetson.bat`
-to compare against ONNX on Windows.
+`scripts/test_engine_predict.sh` does this for both engines. The `.txt` files use the same format
+as `results/predict/windows/*.txt` (ONNX on Windows), so the detections can be compared line by line.
 
 Eval mode measures COCO accuracy. It writes `predictions.json` and `run_info.json` with the
 evaluation thresholds conf 0.001, IoU 0.7 and 300 detections, the same as the Windows baseline:
@@ -61,7 +61,7 @@ evaluation thresholds conf 0.001, IoU 0.7 and 300 detections, the same as the Wi
 ```bash
 ./edge_ai_inference --engine /mnt/usb-drive/models/yolov8n-seg_320x416_fp16_trt8.2.1.engine \
                     --eval   /mnt/usb-drive/Edge-AI-Jetson/data/coco_val500/images \
-                    --output /mnt/usb-drive/Edge-AI-Jetson/data/results/accuracy/jetson_fp16
+                    --output /mnt/usb-drive/Edge-AI-Jetson/results/accuracy/jetson_fp16
 ```
 
 Then score it with `scripts/coco_metrics.py --pred <output>/predictions.json`, and compare all runs
@@ -72,10 +72,10 @@ Video mode annotates a video file. It decodes and encodes on the hardware, and e
 ```bash
 ./edge_ai_inference --engine /mnt/usb-drive/models/yolov8n-seg_320x416_fp16_trt8.2.1.engine \
                     --video  /mnt/usb-drive/Edge-AI-Jetson/data/videos/demo_video.mp4 \
-                    --output /mnt/usb-drive/Edge-AI-Jetson/data/results/video \
+                    --output /mnt/usb-drive/Edge-AI-Jetson/results/video \
                     --save-frames 10
-# -> data/results/video/demo_video_annotated.mp4
-# -> data/results/video/demo_video_frames/frame_000000.jpg ... (10 frames, evenly spaced)
+# -> results/video/demo_video_annotated.mp4
+# -> results/video/demo_video_frames/frame_000000.jpg ... (10 frames, evenly spaced)
 ```
 
 For a repeatable benchmark, `--loop-seconds 300` replays the video for 5 minutes and saves nothing.

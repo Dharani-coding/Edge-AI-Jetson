@@ -1,0 +1,4 @@
+run,box mAP50,box mAP50 delta,box mAP50-95,box mAP50-95 delta,mask mAP50,mask mAP50 delta,mask mAP50-95,mask mAP50-95 delta,box P,box P delta,box R,box R delta,box F1,box F1 delta,mask P,mask P delta,mask R,mask R delta,mask F1,mask F1 delta,num_images,backend,engine
+windows_onnx,42.31,+0.00,30.04,+0.00,38.52,+0.00,22.79,+0.00,70.50,+0.00,41.37,+0.00,52.14,+0.00,66.01,+0.00,39.17,+0.00,49.17,+0.00,500,onnxruntime 1.31.1 (CPUExecutionProvider),yolov8n-seg.onnx
+jetson_fp16,42.30,-0.00,30.01,-0.03,38.52,+0.01,22.80,+0.01,70.56,+0.06,41.37,+0.00,52.16,+0.02,66.12,+0.10,39.20,+0.03,49.22,+0.05,500,TensorRT 8.2.1,yolov8n-seg_320x416_fp16_trt8.2.1.engine
+jetson_fp32,42.31,+0.00,30.04,+0.00,38.52,+0.00,22.79,+0.00,70.50,+0.00,41.37,+0.00,52.14,+0.00,66.01,+0.00,39.17,+0.00,49.17,+0.00,500,TensorRT 8.2.1,yolov8n-seg_320x416_fp32_trt8.2.1.engine

@@ -4,7 +4,7 @@
 #
 #   ./nvprof_profile.sh
 #
-# Output in profiling/results/:
+# Output in results/profiling/:
 #   nvprof_fp16_maxn.log   GPU summary only: one row per kernel / memcpy
 #                          (time %, total, calls, avg, min, max)
 #
@@ -17,16 +17,17 @@
 set -euo pipefail
 
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)       # .../Edge-AI-Jetson/jetson/profiling
-RESULTS="$SCRIPT_DIR/results"
+REPO_DIR=$(cd "$SCRIPT_DIR/../.." && pwd)       # .../Edge-AI-Jetson
+RESULTS="$REPO_DIR/results/profiling"
 LOG="$RESULTS/nvprof_fp16_maxn.log"
 RAW="$(mktemp)"                                 # full nvprof output, deleted at the end
 NVPROF="/usr/local/cuda/bin/nvprof"
 APP="/mnt/usb-drive/build/edge-ai-inference/edge_ai_inference"
 ENGINE="/mnt/usb-drive/models/yolov8n-seg_320x416_fp16_trt8.2.1.engine"
-VIDEO="/mnt/usb-drive/Edge-AI-Jetson/data/videos/demo_video.mp4"
+VIDEO="$REPO_DIR/data/videos/demo_video.mp4"
 NAME_WIDTH=160                                  # max characters per log line
 
-[[ -x $APP ]] || { echo "App not built: $APP (run: bash ../clean_and_build.sh)"; exit 1; }
+[[ -x $APP ]] || { echo "App not built: $APP (run: bash ../scripts/clean_and_build.sh)"; exit 1; }
 mkdir -p "$RESULTS"
 trap 'sudo rm -f "$RAW"' EXIT
 

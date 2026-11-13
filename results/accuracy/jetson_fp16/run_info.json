@@ -1,0 +1,15 @@
+{
+  "platform": "jetson",
+  "backend": "TensorRT 8.2.1",
+  "precision": "fp16",
+  "engine": "yolov8n-seg_320x416_fp16_trt8.2.1.engine",
+  "input": "320x416",
+  "conf": 0.001,
+  "iou": 0.7,
+  "max_det": 300,
+  "num_images": 500,
+  "mean_preprocess_ms": 3.19,
+  "mean_inference_ms": 28.35,
+  "mean_postprocess_ms": 82.52,
+  "total_seconds": 68.9
+}

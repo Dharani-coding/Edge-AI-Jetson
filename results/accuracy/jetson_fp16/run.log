@@ -1,0 +1,31 @@
+
+Configuration:
+  engine     : /mnt/usb-drive/models/yolov8n-seg_320x416_fp16_trt8.2.1.engine
+  thresholds : conf 0.001, iou 0.7, max 300, masks on
+  eval       : /mnt/usb-drive/Edge-AI-Jetson/data/coco_val500/images -> /mnt/usb-drive/Edge-AI-Jetson/data/results/accuracy/jetson_fp16/predictions.json
+Engine: /mnt/usb-drive/models/yolov8n-seg_320x416_fp16_trt8.2.1.engine (15.4554 MB)
+
+TensorRT bindings:
+  0: images [1, 3, 320, 416]  (input)
+  1: output1 [1, 32, 80, 104]
+  2: output0 [1, 116, 2730]
+
+Input 416x320 | anchors 2730 | classes 80 | prototypes 32x104x80
+
+Evaluating 500 image(s) -> /mnt/usb-drive/Edge-AI-Jetson/data/results/accuracy/jetson_fp16/predictions.json
+(conf 0.001, NMS IoU 0.7, max_det 300)
+
+  50/500 images, 6975 predictions
+  100/500 images, 12828 predictions
+  150/500 images, 19702 predictions
+  200/500 images, 25938 predictions
+  250/500 images, 32774 predictions
+  300/500 images, 37890 predictions
+  350/500 images, 44214 predictions
+  400/500 images, 51600 predictions
+  450/500 images, 58059 predictions
+  500/500 images, 63045 predictions
+
+Saved /mnt/usb-drive/Edge-AI-Jetson/data/results/accuracy/jetson_fp16/predictions.json (63045 predictions) and run_info.json
+Mean per image: pre 3.2 ms, trt 28.4 ms, post 82.5 ms
+Score with: python3 scripts/coco_metrics.py --pred /mnt/usb-drive/Edge-AI-Jetson/data/results/accuracy/jetson_fp16/predictions.json

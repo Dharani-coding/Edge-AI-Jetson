@@ -11,7 +11,7 @@ namespace edge_ai {
 //   <name>.txt    one detection per line, in original-image pixels:
 //                 class_id confidence x1 y1 x2 y2 class_name
 //
-// The text format matches windows/scripts/compare_with_jetson.py, so the
+// The text format matches results/predict/windows/*.txt, so the
 // Jetson (TensorRT) and Windows (ONNX) results can be compared directly.
 int runOnImages(const AppConfig& config);
 

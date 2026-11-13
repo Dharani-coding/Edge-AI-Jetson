@@ -1,0 +1,20 @@
+
+Configuration:
+  engine     : /mnt/usb-drive/models/yolov8n-seg_320x416_fp32_trt8.2.1.engine
+  thresholds : conf 0.25, iou 0.45, max 100, masks on
+  images     : /mnt/usb-drive/Edge-AI-Jetson/data/test_images -> /mnt/usb-drive/Edge-AI-Jetson/data/results/jetson_fp32
+Engine: /mnt/usb-drive/models/yolov8n-seg_320x416_fp32_trt8.2.1.engine (29.2014 MB)
+
+TensorRT bindings:
+  0: images [1, 3, 320, 416]  (input)
+  1: output1 [1, 32, 80, 104]
+  2: output0 [1, 116, 2730]
+
+Input 416x320 | anchors 2730 | classes 80 | prototypes 32x104x80
+
+Processing 2 image(s) -> /mnt/usb-drive/Edge-AI-Jetson/data/results/jetson_fp32
+
+image 1/2 test_img1.jpeg: 547x365 2 elephant, 2 person | pre 9.6 ms, trt 40.5 ms, post 4.9 ms
+image 2/2 test_img2.jpeg: 682x449 1 bear, 1 dog, 1 person | pre 3.3 ms, trt 40.6 ms, post 5.0 ms
+
+Results saved to /mnt/usb-drive/Edge-AI-Jetson/data/results/jetson_fp32

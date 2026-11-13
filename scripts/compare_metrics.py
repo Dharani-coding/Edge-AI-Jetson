@@ -6,8 +6,8 @@ versus the baseline in brackets (percentage points; negative = accuracy lost).
 Also saves comparison.csv in the accuracy folder.
 
     python scripts/compare_metrics.py
-        baseline : data/results/accuracy/windows_onnx/metrics.json
-        others   : every other data/results/accuracy/*/metrics.json
+        baseline : results/accuracy/windows_onnx/metrics.json
+        others   : every other results/accuracy/*/metrics.json
 
     python scripts/compare_metrics.py --baseline A/metrics.json B/metrics.json C/metrics.json
 """
@@ -19,7 +19,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]   # Edge-AI-Jetson/
-ACCURACY_DIR = ROOT / "data" / "results" / "accuracy"
+ACCURACY_DIR = ROOT / "results" / "accuracy"
 
 MAP_COLUMNS = [("box", "mAP50", "box mAP50"), ("box", "mAP50_95", "box mAP50-95"),
                ("mask", "mAP50", "mask mAP50"), ("mask", "mAP50_95", "mask mAP50-95")]

@@ -1,18 +1,20 @@
 #!/usr/bin/env bash
 # trtexec profile of the FP32 and FP16 engines in MAXN (10 W), then in 5 W.
-# All output goes to one log: profiling/results/trtexec_profile_<date>_<time>.log
+# All output goes to one log: results/profiling/trtexec_profile_<date>_<time>.log
 #
 #   ./trtexec_profile.sh
 
 set -euo pipefail
 
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)       # .../Edge-AI-Jetson/jetson/profiling
-LOG="$SCRIPT_DIR/results/trtexec_profile_$(date +%Y%m%d_%H%M%S).log"
+REPO_DIR=$(cd "$SCRIPT_DIR/../.." && pwd)       # .../Edge-AI-Jetson
+RESULTS="$REPO_DIR/results/profiling"
+LOG="$RESULTS/trtexec_profile_$(date +%Y%m%d_%H%M%S).log"
 TRTEXEC="/usr/src/tensorrt/bin/trtexec"
 FP32_ENGINE="/mnt/usb-drive/models/yolov8n-seg_320x416_fp32_trt8.2.1.engine"
 FP16_ENGINE="/mnt/usb-drive/models/yolov8n-seg_320x416_fp16_trt8.2.1.engine"
 
-mkdir -p "$SCRIPT_DIR/results"
+mkdir -p "$RESULTS"
 exec > >(tee "$LOG") 2>&1                       # everything below goes to the screen and the log
 
 profile() {   # label, engine

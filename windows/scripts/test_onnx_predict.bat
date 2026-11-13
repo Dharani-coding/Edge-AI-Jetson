@@ -9,6 +9,8 @@ for %%I in ("%~dp0..\..") do set "PROJECT_ROOT=%%~fI"
 
 set "MODEL=%WINDOWS_DIR%\yolov8n-seg.onnx"
 set "IMAGES=%PROJECT_ROOT%\data\test_images"
+rem Annotated images go to results\predict\windows_ultralytics (instead of .\runs\segment\predictN)
+set "OUT=project="%PROJECT_ROOT%\results\predict" name=windows_ultralytics exist_ok=True"
 
-uv run --project "%WINDOWS_DIR%" yolo predict model="%MODEL%" source="%IMAGES%\test_img1.jpeg" imgsz="[320,416]" || exit /b 1
-uv run --project "%WINDOWS_DIR%" yolo predict model="%MODEL%" source="%IMAGES%\test_img2.jpeg" imgsz="[320,416]" || exit /b 1
+uv run --project "%WINDOWS_DIR%" yolo predict model="%MODEL%" source="%IMAGES%\test_img1.jpeg" imgsz="[320,416]" %OUT% || exit /b 1
+uv run --project "%WINDOWS_DIR%" yolo predict model="%MODEL%" source="%IMAGES%\test_img2.jpeg" imgsz="[320,416]" %OUT% || exit /b 1

@@ -21,7 +21,7 @@ import subprocess
 import sys
 import time
 
-REPO_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))   # .../Edge-AI-Jetson
+REPO_DIR = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))   # .../Edge-AI-Jetson
 DEFAULT_DIR = os.path.join(REPO_DIR, "data", "videos")
 
 

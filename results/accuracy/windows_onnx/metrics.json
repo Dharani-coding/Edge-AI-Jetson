@@ -1,0 +1,40 @@
+{
+  "num_images": 500,
+  "num_predictions": 63016,
+  "pr_conf": 0.25,
+  "pr_iou": 0.5,
+  "box": {
+    "mAP50": 0.4230580161461736,
+    "mAP50_95": 0.30039137498404245,
+    "precision": 0.7050067658998647,
+    "recall": 0.41371095817893067,
+    "f1": 0.5214345287739782,
+    "tp": 1563,
+    "fp": 654,
+    "num_gt": 3778
+  },
+  "mask": {
+    "mAP50": 0.3851801415643545,
+    "mAP50_95": 0.22788656827218076,
+    "precision": 0.6601248884924175,
+    "recall": 0.39174166225516144,
+    "f1": 0.49169435215946844,
+    "tp": 1480,
+    "fp": 762,
+    "num_gt": 3778
+  },
+  "run": {
+    "platform": "windows",
+    "backend": "onnxruntime 1.31.1 (CPUExecutionProvider)",
+    "precision": "fp32",
+    "model": "yolov8n-seg.onnx",
+    "input": "320x416",
+    "conf": 0.001,
+    "iou": 0.7,
+    "max_det": 300,
+    "annotations": "instances_val2017_subset500.json",
+    "cpu": "Intel64 Family 6 Model 154 Stepping 3, GenuineIntel",
+    "mean_inference_ms": 13.93,
+    "total_seconds": 27.9
+  }
+}

@@ -4,20 +4,20 @@
 #   ./eval_engines_coco.sh
 #
 # Output (COCO predictions + run settings/timings + run log):
-#   data/results/accuracy/jetson_fp16/{predictions.json, run_info.json, run.log}
-#   data/results/accuracy/jetson_fp32/{predictions.json, run_info.json, run.log}
+#   results/accuracy/jetson_fp16/{predictions.json, run_info.json, run.log}
+#   results/accuracy/jetson_fp32/{predictions.json, run_info.json, run.log}
 #
 # Then score each with scripts/coco_metrics.py --pred <dir>/predictions.json,
 # and compare with scripts/compare_metrics.py.
 
 set -euo pipefail
 
-SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)       # .../Edge-AI-Jetson/jetson
-REPO_DIR=$(dirname "$SCRIPT_DIR")               # .../Edge-AI-Jetson
+SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)       # .../Edge-AI-Jetson/jetson/scripts
+REPO_DIR=$(cd "$SCRIPT_DIR/../.." && pwd)       # .../Edge-AI-Jetson
 BUILD_DIR="/mnt/usb-drive/build/edge-ai-inference"
 MODELS_DIR="/mnt/usb-drive/models"
 IMAGES_DIR="$REPO_DIR/data/coco_val500/images"
-RESULTS_DIR="$REPO_DIR/data/results/accuracy"
+RESULTS_DIR="$REPO_DIR/results/accuracy"
 
 # Engine names follow build_engines.sh: <model>_<HxW>_<precision>_trt<version>.engine
 MODEL="yolov8n-seg"

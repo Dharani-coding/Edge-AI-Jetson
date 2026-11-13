@@ -8,9 +8,13 @@
 # Output (next to the ONNX file):
 #   yolov8n-seg_320x416_fp32_trt8.2.1.engine  + .log
 #   yolov8n-seg_320x416_fp16_trt8.2.1.engine  + .log
+# A copy of each .log also goes to results/engines/ in the repo.
 
 set -euo pipefail
 
+SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)       # .../Edge-AI-Jetson/jetson/scripts
+REPO_DIR=$(cd "$SCRIPT_DIR/../.." && pwd)       # .../Edge-AI-Jetson
+LOG_COPY_DIR="$REPO_DIR/results/engines"
 ONNX="${1:-/mnt/usb-drive/models/yolov8n-seg.onnx}"
 SIZE="${2:-320x416}"     # input height x width the ONNX was exported with (used in the name)
 TRTEXEC="/usr/src/tensorrt/bin/trtexec"
@@ -32,6 +36,8 @@ for PRECISION in fp32 fp16; do
 
     echo "==> Building $ENGINE"
     "$TRTEXEC" --onnx="$ONNX" --saveEngine="$ENGINE" --workspace=1024 "${FLAGS[@]}" 2>&1 | tee "$LOG"
+    mkdir -p "$LOG_COPY_DIR"
+    cp "$LOG" "$LOG_COPY_DIR/"
     echo "==> Saved $ENGINE"
-    echo "==> Log   $LOG"
+    echo "==> Log   $LOG (copy in $LOG_COPY_DIR)"
 done

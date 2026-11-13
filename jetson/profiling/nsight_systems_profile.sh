@@ -2,10 +2,10 @@
 # Nsight Systems profile of the C++ app (FP16, MAXN), looping the demo video,
 # with the app's NVTX stage labels (frame > capture, pre, trt, post, draw, stream).
 #
-#   bash ../clean_and_build.sh      # once, so the app is built with NVTX
+#   bash ../scripts/clean_and_build.sh      # once, so the app is built with NVTX
 #   ./nsight_systems_profile.sh
 #
-# Output in profiling/results/:
+# Output in results/profiling/:
 #   nsys_fp16_maxn.nsys-rep             open in the Nsight Systems GUI (timeline)
 #   nsys_profile_<date>_<time>.log      nsys stats tables only
 #
@@ -28,14 +28,15 @@
 set -euo pipefail
 
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)       # .../Edge-AI-Jetson/jetson/profiling
-RESULTS="$SCRIPT_DIR/results"
+REPO_DIR=$(cd "$SCRIPT_DIR/../.." && pwd)       # .../Edge-AI-Jetson
+RESULTS="$REPO_DIR/results/profiling"
 REPORT="$RESULTS/nsys_fp16_maxn"
 LOG="$RESULTS/nsys_profile_$(date +%Y%m%d_%H%M%S).log"
 APP="/mnt/usb-drive/build/edge-ai-inference/edge_ai_inference"
 ENGINE="/mnt/usb-drive/models/yolov8n-seg_320x416_fp16_trt8.2.1.engine"
-VIDEO="/mnt/usb-drive/Edge-AI-Jetson/data/videos/demo_video.mp4"
+VIDEO="$REPO_DIR/data/videos/demo_video.mp4"
 
-[[ -x $APP ]] || { echo "App not built: $APP (run: bash ../clean_and_build.sh)"; exit 1; }
+[[ -x $APP ]] || { echo "App not built: $APP (run: bash ../scripts/clean_and_build.sh)"; exit 1; }
 mkdir -p "$RESULTS"
 
 echo "==> MAXN"

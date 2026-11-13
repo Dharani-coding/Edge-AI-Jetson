@@ -14,7 +14,7 @@ Writes metrics.json next to predictions.json (or --out). If run_info.json sits
 next to predictions.json (written by the C++ app's --eval mode), it is copied
 into metrics.json under "run".
 
-    python scripts/coco_metrics.py --pred data/results/accuracy/jetson_fp16/predictions.json
+    python scripts/coco_metrics.py --pred results/accuracy/jetson_fp16/predictions.json
 """
 
 import argparse

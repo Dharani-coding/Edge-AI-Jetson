@@ -7,8 +7,8 @@
 
 set -euo pipefail
 
-SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)       # .../Edge-AI-Jetson/jetson
-SOURCE_DIR="$SCRIPT_DIR/cpp"
+SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)       # .../Edge-AI-Jetson/jetson/scripts
+SOURCE_DIR=$(cd "$SCRIPT_DIR/../cpp" && pwd)    # .../Edge-AI-Jetson/jetson/cpp
 BUILD_DIR="${1:-/mnt/usb-drive/build/edge-ai-inference}"
 
 echo "==> Clean build in $BUILD_DIR"

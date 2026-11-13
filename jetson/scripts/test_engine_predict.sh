@@ -4,18 +4,18 @@
 #   ./test_engine_predict.sh
 #
 # Output (annotated images + <name>.txt detections + run log):
-#   data/results/jetson_fp16/
-#   data/results/jetson_fp32/
+#   results/predict/jetson_fp16/
+#   results/predict/jetson_fp32/
 #
 
 set -euo pipefail
 
-SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)       # .../Edge-AI-Jetson/jetson
-REPO_DIR=$(dirname "$SCRIPT_DIR")               # .../Edge-AI-Jetson
+SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)       # .../Edge-AI-Jetson/jetson/scripts
+REPO_DIR=$(cd "$SCRIPT_DIR/../.." && pwd)       # .../Edge-AI-Jetson
 BUILD_DIR="/mnt/usb-drive/build/edge-ai-inference"
 MODELS_DIR="/mnt/usb-drive/models"
 IMAGES_DIR="$REPO_DIR/data/test_images"
-RESULTS_DIR="$REPO_DIR/data/results"
+RESULTS_DIR="$REPO_DIR/results/predict"
 
 # Engine names follow build_engines.sh: <model>_<HxW>_<precision>_trt<version>.engine
 MODEL="yolov8n-seg"

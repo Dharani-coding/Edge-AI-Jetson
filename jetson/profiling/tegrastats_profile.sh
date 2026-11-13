@@ -2,10 +2,10 @@
 # Sustained benchmark: the C++ app loops the demo video for 5 minutes per run
 # (FP32 and FP16, in MAXN then 5 W) while tegrastats logs power, RAM and temperatures.
 #
-#   bash ../clean_and_build.sh      # once, if the app is not built yet
+#   bash ../scripts/clean_and_build.sh      # once, if the app is not built yet
 #   ./tegrastats_profile.sh         # 4 runs x (5 min + 1 min cool-down), about 25 minutes
 #
-# Output in profiling/results/:
+# Output in results/profiling/:
 #   tegrastats_profile_<date>_<time>.log      app output + one tegrastats summary line per run
 #   tegrastats_<precision>_<mode>.log         raw tegrastats samples (every 500 ms)
 #
@@ -15,8 +15,8 @@
 set -euo pipefail
 
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)       # .../Edge-AI-Jetson/jetson/profiling
-REPO_DIR=$(dirname "$(dirname "$SCRIPT_DIR")")  # .../Edge-AI-Jetson
-RESULTS="$SCRIPT_DIR/results"
+REPO_DIR=$(cd "$SCRIPT_DIR/../.." && pwd)       # .../Edge-AI-Jetson
+RESULTS="$REPO_DIR/results/profiling"
 LOG="$RESULTS/tegrastats_profile_$(date +%Y%m%d_%H%M%S).log"
 APP="/mnt/usb-drive/build/edge-ai-inference/edge_ai_inference"
 VIDEO="$REPO_DIR/data/videos/demo_video.mp4"
@@ -28,7 +28,7 @@ SKIP_SECONDS=60      # warm-up left out of the summary
 INTERVAL_MS=500      # tegrastats sampling period
 COOLDOWN_SECONDS=60  # pause between runs so the board cools down
 
-[[ -x $APP ]]   || { echo "App not built: $APP (run: bash ../clean_and_build.sh)"; exit 1; }
+[[ -x $APP ]]   || { echo "App not built: $APP (run: bash ../scripts/clean_and_build.sh)"; exit 1; }
 [[ -f $VIDEO ]] || { echo "Video not found: $VIDEO"; exit 1; }
 
 mkdir -p "$RESULTS"

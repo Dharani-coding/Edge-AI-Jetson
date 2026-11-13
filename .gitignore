@@ -1,4 +1,3 @@
-
 # Python
 __pycache__/
 *.py[cod]
@@ -6,6 +5,8 @@ __pycache__/
 venv/
 .env
 runs/
+
+# Inputs: datasets, videos, test images (large, kept locally / on the Jetson)
 data/
 
 # Models and generated engines
@@ -16,22 +17,23 @@ data/
 *.pth
 *.weights
 
-# Data and video
-data/
+# Video
 *.mp4
 *.avi
 *.mkv
 
-# Generated benchmark output
-logs/
-results/**/*.csv
-results/**/*.json
+# Large generated results (small logs, metrics and images in results/ are committed)
+results/**/predictions.json
+
+# Profiler reports (binary, large)
+*.nsys-rep
+*.qdrep
+*.qdstrm
+*.sqlite
+*.nvvp
 
 # Editor and OS
 .vscode/
 .idea/
 .DS_Store
 Thumbs.db
-
-
-/edge_data/*

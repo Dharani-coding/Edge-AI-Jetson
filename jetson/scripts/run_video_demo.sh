@@ -5,19 +5,19 @@
 #   ./run_video_demo.sh                                   # data/videos/demo_video.mp4, 10 frames
 #
 # Output:
-#   data/results/video/<name>_annotated.mp4
-#   data/results/video/<name>_frames/frame_NNNNNN.jpg
-#   data/results/video/run.log
+#   results/video/<name>_annotated.mp4
+#   results/video/<name>_frames/frame_NNNNNN.jpg
+#   results/video/run.log
 
 set -euo pipefail
 
-SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)       # .../Edge-AI-Jetson/jetson
-REPO_DIR=$(dirname "$SCRIPT_DIR")               # .../Edge-AI-Jetson
+SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)       # .../Edge-AI-Jetson/jetson/scripts
+REPO_DIR=$(cd "$SCRIPT_DIR/../.." && pwd)       # .../Edge-AI-Jetson
 BUILD_DIR="/mnt/usb-drive/build/edge-ai-inference"
 ENGINE="/mnt/usb-drive/models/yolov8n-seg_320x416_fp16_trt8.2.1.engine"
 VIDEO="${1:-$REPO_DIR/data/videos/demo_video.mp4}"
 SAVE_FRAMES="${2:-10}"
-OUT_DIR="$REPO_DIR/data/results/video"
+OUT_DIR="$REPO_DIR/results/video"
 
 [[ -f $VIDEO ]]  || { echo "Video not found: $VIDEO"; exit 1; }
 [[ -f $ENGINE ]] || { echo "Engine not found: $ENGINE (run build_engines.sh)"; exit 1; }

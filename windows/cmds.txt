@@ -1,3 +1,0 @@
-cd .\Edge-AI-Jetson\windows\ 
-.\.venv\Scripts\activate
-Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
