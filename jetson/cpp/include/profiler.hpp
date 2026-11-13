@@ -17,6 +17,9 @@ enum class Stage : int
     Count
 };
 
+// Short stage name: "capture", "pre", "trt", "post", "draw", "stream".
+const char* stageName(Stage stage);
+
 // Per-stage latency, averaged over a reporting window.
 //
 //   profiler.beginFrame();

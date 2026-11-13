@@ -78,6 +78,10 @@ Video mode annotates a video file. It decodes and encodes on the hardware, and e
 # -> data/results/video/demo_video_frames/frame_000000.jpg ... (10 frames, evenly spaced)
 ```
 
+For a repeatable benchmark, `--loop-seconds 300` replays the video for 5 minutes and saves nothing.
+At the end it prints the sustained FPS and the mean time per stage.
+`profiling/tegrastats_profile.sh` runs this for FP32 and FP16, in MAXN and 5 W, while logging tegrastats.
+
 Stop the camera mode with **Ctrl+C**, which releases the camera cleanly. If Argus ever gets stuck after a crash, run:
 
 ```bash

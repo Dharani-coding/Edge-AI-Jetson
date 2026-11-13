@@ -70,6 +70,10 @@ void validate(const AppConfig& c)
     require(modes <= 1, "Use only one of --images, --eval and --video");
     require(c.save_frames >= 0, "--save-frames must be >= 0");
     require(c.save_frames == 0 || !c.video_path.empty(), "--save-frames needs --video");
+    require(c.loop_seconds >= 0, "--loop-seconds must be >= 0");
+    require(c.loop_seconds == 0 || !c.video_path.empty(), "--loop-seconds needs --video");
+    require(c.loop_seconds == 0 || c.save_frames == 0,
+            "--loop-seconds saves nothing; drop --save-frames (use a single pass for saved output)");
 }
 
 }  // namespace
@@ -122,6 +126,7 @@ bool parseArgs(int argc, char** argv, AppConfig& c)
         // Video mode
         else if (arg == "--video")             c.video_path = nextValue(i, argc, argv);
         else if (arg == "--save-frames")       c.save_frames = toInt(arg, nextValue(i, argc, argv));
+        else if (arg == "--loop-seconds")      c.loop_seconds = toInt(arg, nextValue(i, argc, argv));
         else
             throw std::invalid_argument("Unknown option: " + arg + " (see --help)");
     }
@@ -168,6 +173,8 @@ void printUsage(const char* program)
         << "Video mode (no camera, no stream):\n"
         << "  --video PATH         video file; writes <--output>/<name>_annotated.mp4\n"
         << "  --save-frames N      also save N annotated frames, evenly spaced, as JPG\n"
+        << "  --loop-seconds N     benchmark: replay the video for N seconds, save no output,\n"
+        << "                       print sustained FPS and per-stage averages at the end\n"
         << "  --max-frames N       only process the first N frames\n";
 }
 
@@ -183,7 +190,11 @@ void printConfig(const AppConfig& c)
 
     if (!c.video_path.empty())
     {
-        std::cout << "  video      : " << c.video_path << " -> " << c.output_dir;
+        std::cout << "  video      : " << c.video_path;
+        if (c.loop_seconds > 0)
+            std::cout << " (looping " << c.loop_seconds << " s, no output saved)";
+        else
+            std::cout << " -> " << c.output_dir;
         if (c.save_frames > 0)
             std::cout << " (+" << c.save_frames << " frames)";
         std::cout << "\n";

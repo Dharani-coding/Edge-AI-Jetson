@@ -8,6 +8,11 @@ namespace {
 constexpr const char* kStageNames[] = {"capture", "pre", "trt", "post", "draw", "stream"};
 }
 
+const char* stageName(Stage stage)
+{
+    return kStageNames[static_cast<int>(stage)];
+}
+
 Profiler::Profiler() : window_start_(Clock::now()) {}
 
 double Profiler::msSince(Clock::time_point start, Clock::time_point end)

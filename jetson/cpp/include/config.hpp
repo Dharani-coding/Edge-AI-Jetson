@@ -54,6 +54,7 @@ struct AppConfig
     // Video mode: if set, annotate this video file into <output_dir>/<name>_annotated.mp4.
     std::string video_path;
     int save_frames = 0;                // also save this many annotated frames as JPG
+    int loop_seconds = 0;               // >0: replay the video for this long, save nothing (benchmark)
 };
 
 // Detector defaults in --eval mode (same as Ultralytics validation and
