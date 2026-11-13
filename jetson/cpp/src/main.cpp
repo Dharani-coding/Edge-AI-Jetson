@@ -12,6 +12,7 @@
 #include "profiler.hpp"
 #include "trt_engine.hpp"
 #include "video_io.hpp"
+#include "video_mode.hpp"
 #include "visualizer.hpp"
 #include "yolo_seg.hpp"
 
@@ -205,6 +206,8 @@ int main(int argc, char** argv)
 
     try
     {
+        if (!config.video_path.empty())
+            return runOnVideo(config, g_stop_requested);
         if (!config.eval_path.empty())
             return runEvaluation(config);
         if (!config.images_path.empty())

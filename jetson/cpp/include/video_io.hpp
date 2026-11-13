@@ -64,4 +64,53 @@ private:
     cv::Mat resized_;
 };
 
+// Reads a video file. H.264 MP4s (e.g. from record_video.py) are decoded on the
+// hardware decoder (nvv4l2decoder); other files fall back to OpenCV's own reader.
+class VideoFileSource
+{
+public:
+    explicit VideoFileSource(const std::string& path);
+
+    VideoFileSource(const VideoFileSource&) = delete;
+    VideoFileSource& operator=(const VideoFileSource&) = delete;
+
+    bool open();
+    bool read(cv::Mat& frame);   // false at end of file
+
+    double fps() const;          // 0 if unknown
+    long frameCount() const;     // <= 0 if unknown
+    bool hardwareDecoding() const { return hardware_; }
+    std::string pipeline() const;
+
+private:
+    std::string path_;
+    cv::VideoCapture capture_;
+    bool hardware_ = false;
+};
+
+// Writes BGR frames to an H.264 MP4 with the hardware encoder.
+// No frames are dropped; close() (or the destructor) finalises the file.
+class Mp4Writer
+{
+public:
+    Mp4Writer(const std::string& path, const cv::Size& frame_size, double fps, int bitrate);
+    ~Mp4Writer();
+
+    Mp4Writer(const Mp4Writer&) = delete;
+    Mp4Writer& operator=(const Mp4Writer&) = delete;
+
+    bool open();
+    void write(const cv::Mat& frame);
+    void close();
+
+    std::string pipeline() const;
+
+private:
+    std::string path_;
+    cv::Size frame_size_;
+    double fps_;
+    int bitrate_;
+    cv::VideoWriter writer_;
+};
+
 }  // namespace edge_ai

@@ -66,7 +66,10 @@ void validate(const AppConfig& c)
     require(c.stream.bitrate > 0, "--bitrate must be > 0");
     require(c.stats_interval >= 0, "--stats must be >= 0");
     require(c.max_frames >= 0, "--max-frames must be >= 0");
-    require(c.eval_path.empty() || c.images_path.empty(), "Use either --images or --eval, not both");
+    const int modes = !c.images_path.empty() + !c.eval_path.empty() + !c.video_path.empty();
+    require(modes <= 1, "Use only one of --images, --eval and --video");
+    require(c.save_frames >= 0, "--save-frames must be >= 0");
+    require(c.save_frames == 0 || !c.video_path.empty(), "--save-frames needs --video");
 }
 
 }  // namespace
@@ -116,6 +119,9 @@ bool parseArgs(int argc, char** argv, AppConfig& c)
         else if (arg == "--images")            c.images_path = nextValue(i, argc, argv);
         else if (arg == "--output")            c.output_dir = nextValue(i, argc, argv);
         else if (arg == "--eval")              c.eval_path = nextValue(i, argc, argv);
+        // Video mode
+        else if (arg == "--video")             c.video_path = nextValue(i, argc, argv);
+        else if (arg == "--save-frames")       c.save_frames = toInt(arg, nextValue(i, argc, argv));
         else
             throw std::invalid_argument("Unknown option: " + arg + " (see --help)");
     }
@@ -158,7 +164,11 @@ void printUsage(const char* program)
         << "Eval mode (COCO accuracy):\n"
         << "  --eval DIR           COCO images folder; writes <--output>/predictions.json + run_info.json\n"
         << "                       defaults become conf " << kEvalConfThreshold << ", iou " << kEvalIouThreshold
-        << ", max-det " << kEvalMaxDetections << "; masks always on\n";
+        << ", max-det " << kEvalMaxDetections << "; masks always on\n\n"
+        << "Video mode (no camera, no stream):\n"
+        << "  --video PATH         video file; writes <--output>/<name>_annotated.mp4\n"
+        << "  --save-frames N      also save N annotated frames, evenly spaced, as JPG\n"
+        << "  --max-frames N       only process the first N frames\n";
 }
 
 void printConfig(const AppConfig& c)
@@ -171,6 +181,14 @@ void printConfig(const AppConfig& c)
         << ", max " << c.detector.max_detections
         << (c.detector.draw_masks ? ", masks on" : ", masks off") << "\n";
 
+    if (!c.video_path.empty())
+    {
+        std::cout << "  video      : " << c.video_path << " -> " << c.output_dir;
+        if (c.save_frames > 0)
+            std::cout << " (+" << c.save_frames << " frames)";
+        std::cout << "\n";
+        return;
+    }
     if (!c.eval_path.empty())
     {
         std::cout << "  eval       : " << c.eval_path << " -> " << c.output_dir << "/predictions.json\n";

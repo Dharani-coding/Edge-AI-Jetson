@@ -50,6 +50,10 @@ struct AppConfig
     // Eval mode: if set, write COCO predictions.json for the images in this folder.
     // Detector defaults switch to COCO-evaluation values (see kEval* below).
     std::string eval_path;
+
+    // Video mode: if set, annotate this video file into <output_dir>/<name>_annotated.mp4.
+    std::string video_path;
+    int save_frames = 0;                // also save this many annotated frames as JPG
 };
 
 // Detector defaults in --eval mode (same as Ultralytics validation and

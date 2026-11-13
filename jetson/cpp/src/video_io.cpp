@@ -113,4 +113,84 @@ void RtpStreamer::write(const cv::Mat& frame)
     }
 }
 
+// ---------------------------------------------------------- VideoFileSource
+
+VideoFileSource::VideoFileSource(const std::string& path) : path_(path) {}
+
+std::string VideoFileSource::pipeline() const
+{
+    // No drop/leaky settings: every frame of the file must be processed.
+    std::ostringstream p;
+    p << "filesrc location=\"" << path_ << "\""
+      << " ! qtdemux ! h264parse ! nvv4l2decoder"
+      << " ! nvvidconv ! video/x-raw,format=BGRx"
+      << " ! videoconvert ! video/x-raw,format=BGR"
+      << " ! appsink sync=false";
+    return p.str();
+}
+
+bool VideoFileSource::open()
+{
+    hardware_ = capture_.open(pipeline(), cv::CAP_GSTREAMER);
+    if (!hardware_)
+        capture_.open(path_);   // not an H.264 MP4: let OpenCV pick a decoder
+    return capture_.isOpened();
+}
+
+bool VideoFileSource::read(cv::Mat& frame)
+{
+    return capture_.isOpened() && capture_.read(frame) && !frame.empty();
+}
+
+double VideoFileSource::fps() const
+{
+    const double fps = capture_.get(cv::CAP_PROP_FPS);
+    return fps > 0.0 && fps < 1000.0 ? fps : 0.0;
+}
+
+long VideoFileSource::frameCount() const
+{
+    return static_cast<long>(capture_.get(cv::CAP_PROP_FRAME_COUNT));
+}
+
+// ---------------------------------------------------------------- Mp4Writer
+
+Mp4Writer::Mp4Writer(const std::string& path, const cv::Size& frame_size, double fps, int bitrate)
+    : path_(path), frame_size_(frame_size), fps_(fps), bitrate_(bitrate)
+{
+}
+
+Mp4Writer::~Mp4Writer() { close(); }
+
+std::string Mp4Writer::pipeline() const
+{
+    std::ostringstream p;
+    p << "appsrc ! video/x-raw,format=BGR"
+      << " ! videoconvert ! video/x-raw,format=BGRx"
+      << " ! nvvidconv ! video/x-raw(memory:NVMM),format=NV12"
+      << " ! nvv4l2h264enc bitrate=" << bitrate_ << " maxperf-enable=1"
+      << " ! h264parse ! qtmux"
+      << " ! filesink location=\"" << path_ << "\"";
+    return p.str();
+}
+
+bool Mp4Writer::open()
+{
+    close();
+    return writer_.open(pipeline(), cv::CAP_GSTREAMER, 0, fps_, frame_size_, true);
+}
+
+void Mp4Writer::write(const cv::Mat& frame)
+{
+    if (writer_.isOpened())
+        writer_.write(frame);
+}
+
+void Mp4Writer::close()
+{
+    // release() sends end-of-stream and waits, so qtmux writes the MP4 index.
+    if (writer_.isOpened())
+        writer_.release();
+}
+
 }  // namespace edge_ai

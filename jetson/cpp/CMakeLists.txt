@@ -52,6 +52,8 @@ add_library(edge_ai_core STATIC
     src/video_io.cpp
     src/profiler.cpp
     src/image_mode.cpp
+    src/video_mode.cpp
+    src/file_utils.cpp
 )
 
 target_include_directories(edge_ai_core PUBLIC

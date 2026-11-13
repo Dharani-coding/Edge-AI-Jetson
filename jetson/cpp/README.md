@@ -13,7 +13,9 @@ The Jetson runs headless, so nothing is shown on the Jetson itself.
 | `preprocess.hpp/.cpp` | Letterbox, BGR to RGB, HWC to CHW, written directly into the engine input |
 | `yolo_seg.hpp/.cpp` | Decoding, class-aware NMS, segmentation masks |
 | `visualizer.hpp/.cpp` | Mask overlay, boxes, COCO labels, status overlay |
-| `video_io.hpp/.cpp` | `CsiCamera` (nvarguscamerasrc) and `RtpStreamer` (nvv4l2h264enc to udpsink) |
+| `video_io.hpp/.cpp` | `CsiCamera`, `RtpStreamer`, `VideoFileSource` (hardware decoding) and `Mp4Writer` (hardware encoding) |
+| `image_mode`, `video_mode` | `--images`/`--eval` (image files, COCO predictions) and `--video` (annotated MP4 + frames) |
+| `file_utils.hpp/.cpp` | Path helpers (mkdir -p, file name, stem) |
 | `profiler.hpp/.cpp` | Per-stage latency (capture, pre, trt, post, draw, stream) |
 | `cuda_utils.hpp`, `types.hpp` | RAII CUDA buffers and stream, shared structs |
 
@@ -64,6 +66,17 @@ evaluation thresholds conf 0.001, IoU 0.7 and 300 detections, the same as the Wi
 
 Then score it with `scripts/coco_metrics.py --pred <output>/predictions.json`, and compare all runs
 with `scripts/compare_metrics.py`.
+
+Video mode annotates a video file. It decodes and encodes on the hardware, and every frame is processed:
+
+```bash
+./edge_ai_inference --engine /mnt/usb-drive/models/yolov8n-seg_320x416_fp16_trt8.2.1.engine \
+                    --video  /mnt/usb-drive/Edge-AI-Jetson/data/videos/demo_video.mp4 \
+                    --output /mnt/usb-drive/Edge-AI-Jetson/data/results/video \
+                    --save-frames 10
+# -> data/results/video/demo_video_annotated.mp4
+# -> data/results/video/demo_video_frames/frame_000000.jpg ... (10 frames, evenly spaced)
+```
 
 Stop the camera mode with **Ctrl+C**, which releases the camera cleanly. If Argus ever gets stuck after a crash, run:
 

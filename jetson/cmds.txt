@@ -2,3 +2,5 @@
 cd /mnt/usb-drive/Edge-AI-Jetson/jetson
 source /mnt/usb-drive/onnx-env/bin/activate
 cd /mnt/usb-drive/build/edge-ai-inference
+
+gst-launch-1.0 udpsrc port=5000 caps="application/x-rtp,media=video,encoding-name=H264,payload=96" ! rtph264depay ! h264parse ! avdec_h264 ! autovideosink sync=false
